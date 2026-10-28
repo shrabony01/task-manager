@@ -1,51 +1,80 @@
 // src/components/TaskItem/TaskItem.tsx
-import React from 'react';
 import type { TaskItemProps, TaskStatus } from '../../types';
 
-export const TaskItem: React.FC<TaskItemProps> = ({ task, onStatusChange, onDelete }) => {
-  // Helper for priority badge colors
-  const getPriorityStyle = (priority: string) => {
+export function TaskItem({ task, onStatusChange, onDelete }: TaskItemProps) {
+  // Priority text color helper
+  const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'high':
-        return { backgroundColor: '#fee2e2', color: '#991b1b', border: '1px solid #f87171' };
+        return '#dc2626'; // red
       case 'medium':
-        return { backgroundColor: '#fef3c7', color: '#92400e', border: '1px solid #fcd34d' };
+        return '#d97706'; // amber / gold
       case 'low':
       default:
-        return { backgroundColor: '#dcfce7', color: '#166534', border: '1px solid #86efac' };
+        return '#16a34a'; // green
     }
   };
 
-  const isCompleted = task.status === 'completed';
+  // Status dropdown styling helper matching the assignment screenshot
+  const getStatusSelectStyle = (status: TaskStatus) => {
+    switch (status) {
+      case 'pending':
+        return {
+          backgroundColor: '#fef9c3', // light warm yellow tint
+          color: '#a16207',
+          borderColor: '#fef08a',
+        };
+      case 'in-progress':
+        return {
+          backgroundColor: '#ffffff',
+          color: '#2563eb', // blue
+          borderColor: 'transparent',
+        };
+      case 'completed':
+      default:
+        return {
+          backgroundColor: '#ffffff',
+          color: '#16a34a', // green
+          borderColor: 'transparent',
+        };
+    }
+  };
+
+  const statusStyle = getStatusSelectStyle(task.status);
 
   return (
     <div
       style={{
-        border: '1px solid #e2e8f0',
+        border: '1px solid #334155',
         borderRadius: '8px',
-        padding: '16px',
-        marginBottom: '12px',
-        backgroundColor: isCompleted ? '#f8fafc' : '#ffffff',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
-        transition: 'all 0.2s ease',
+        padding: '16px 20px',
+        marginBottom: '16px',
+        backgroundColor: '#ffffff',
       }}
     >
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+      {/* Top Row: Title on Left, Status Dropdown + Delete Link on Right */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+        }}
+      >
         <div>
           <h3
             style={{
-              margin: '0 0 6px 0',
-              fontSize: '18px',
-              color: isCompleted ? '#64748b' : '#0f172a',
-              textDecoration: isCompleted ? 'line-through' : 'none',
+              margin: '0 0 4px 0',
+              fontSize: '16px',
+              fontWeight: 600,
+              color: '#0f172a',
             }}
           >
             {task.title}
           </h3>
           <p
             style={{
-              margin: '0 0 12px 0',
-              color: isCompleted ? '#94a3b8' : '#475569',
+              margin: '0 0 14px 0',
+              color: '#475569',
               fontSize: '14px',
             }}
           >
@@ -53,79 +82,54 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, onStatusChange, onDele
           </p>
         </div>
 
-        {/* Priority Badge */}
-        <span
-          style={{
-            ...getPriorityStyle(task.priority),
-            padding: '4px 10px',
-            borderRadius: '12px',
-            fontSize: '12px',
-            fontWeight: 600,
-            textTransform: 'uppercase',
-          }}
-        >
-          {task.priority}
-        </span>
-      </div>
-
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: '12px',
-          paddingTop: '8px',
-          borderTop: '1px solid #f1f5f9',
-        }}
-      >
-        {/* Status Dropdown */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <label style={{ fontSize: '13px', color: '#475569', fontWeight: 500 }}>Status:</label>
+        {/* Top-Right Controls */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <select
             value={task.status}
             onChange={(e) => onStatusChange(task.id, e.target.value as TaskStatus)}
             style={{
-              padding: '6px 10px',
+              padding: '4px 8px',
               borderRadius: '6px',
-              border: '1px solid #cbd5e1',
-              backgroundColor: '#ffffff',
-              fontSize: '13px',
+              fontSize: '14px',
+              fontWeight: 500,
               cursor: 'pointer',
+              border: `1px solid ${statusStyle.borderColor}`,
+              backgroundColor: statusStyle.backgroundColor,
+              color: statusStyle.color,
             }}
           >
             <option value="pending">Pending</option>
             <option value="in-progress">In Progress</option>
             <option value="completed">Completed</option>
           </select>
-        </div>
 
-        {/* Due Date & Delete Action */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <span style={{ fontSize: '13px', color: '#64748b' }}>
-            Due: <strong>{task.dueDate}</strong>
-          </span>
-
+          {/* Delete Button styled as simple red text button */}
           <button
             onClick={() => onDelete(task.id)}
             style={{
-              padding: '6px 12px',
-              backgroundColor: '#ef4444',
-              color: '#ffffff',
+              background: 'none',
               border: 'none',
-              borderRadius: '6px',
-              fontSize: '13px',
-              fontWeight: 500,
+              color: '#ef4444',
+              fontSize: '14px',
               cursor: 'pointer',
-              transition: 'background-color 0.15s ease',
+              padding: 0,
+              fontWeight: 400,
             }}
-            onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#dc2626')}
-            onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#ef4444')}
           >
             Delete
           </button>
         </div>
       </div>
+
+      {/* Bottom Row: Priority and Due Date */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '14px', fontSize: '13px' }}>
+        <span style={{ color: getPriorityColor(task.priority), fontWeight: 500 }}>
+          Priority: {task.priority}
+        </span>
+        <span style={{ color: '#64748b' }}>
+          Due: {task.dueDate}
+        </span>
+      </div>
     </div>
   );
-};
+}
