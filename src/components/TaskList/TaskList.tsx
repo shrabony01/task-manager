@@ -1,5 +1,5 @@
 // src/components/TaskList/TaskList.tsx
-import { TaskListProps } from '../../types';
+import type { TaskListProps } from '../../types';
 import { TaskItem } from '../TaskItem/TaskItem';
 
 export function TaskList({ tasks, onStatusChange, onDelete }: TaskListProps) {

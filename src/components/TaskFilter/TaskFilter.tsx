@@ -1,6 +1,6 @@
 // src/components/TaskFilter/TaskFilter.tsx
 import React, { useState } from 'react';
-import { TaskFilterProps, TaskStatus, TaskPriority } from '../../types';
+import type { TaskFilterProps, TaskStatus, TaskPriority } from '../../types';
 
 export function TaskFilter({ onFilterChange }: TaskFilterProps) {
   // Track selected dropdown values locally

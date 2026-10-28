@@ -1,6 +1,6 @@
 // src/components/TaskItem/TaskItem.tsx
 import React from 'react';
-import { TaskItemProps, TaskStatus } from '../../types';
+import type { TaskItemProps, TaskStatus } from '../../types';
 
 export const TaskItem: React.FC<TaskItemProps> = ({ task, onStatusChange, onDelete }) => {
   // Helper for priority badge colors
